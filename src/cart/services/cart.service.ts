@@ -1,25 +1,24 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 
-import { v4 } from 'uuid';
-
-import { Cart } from '../models';
+import { Cart, CartItem } from '../models';
 
 @Injectable()
 export class CartService {
-  private userCarts: Record<string, Cart> = {};
+  private userCarts: Record<string, Cart | null> = {};
 
-  findByUserId(userId: string): Cart {
-    return this.userCarts[ userId ];
+  findByUserId(userId: string): Cart | null {
+    return this.userCarts[userId];
   }
 
   createByUserId(userId: string) {
-    const id = v4();
+    const id = randomUUID();
     const userCart = {
       id,
-      items: [],
-    };
+      items: [] as CartItem[],
+    } as Cart;
 
-    this.userCarts[ userId ] = userCart;
+    this.userCarts[userId] = userCart;
 
     return userCart;
   }
@@ -40,16 +39,15 @@ export class CartService {
     const updatedCart = {
       id,
       ...rest,
-      items: [ ...items ],
-    }
+      items: [...items],
+    };
 
-    this.userCarts[ userId ] = { ...updatedCart };
+    this.userCarts[userId] = { ...updatedCart };
 
     return { ...updatedCart };
   }
 
-  removeByUserId(userId): void {
-    this.userCarts[ userId ] = null;
+  removeByUserId(userId: string): void {
+    this.userCarts[userId] = null;
   }
-
 }
