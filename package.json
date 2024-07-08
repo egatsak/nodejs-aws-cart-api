@@ -67,6 +67,7 @@
     "@vercel/ncc": "^0.38.1",
     "aws-cdk": "2.148.0",
     "constructs": "^10.3.0",
+    "esbuild": "^0.23.0",
     "eslint": "8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",

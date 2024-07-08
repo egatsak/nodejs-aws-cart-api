@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import { Cors, LambdaIntegration, RestApi } from 'aws-cdk-lib/aws-apigateway';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import {
   NodejsFunction,
@@ -26,8 +27,29 @@ export class NodejsAwsCartApiStack extends cdk.Stack {
       },
     });
 
-    new cdk.CfnOutput(this, 'Lambda', {
+    const restApi = new RestApi(this, 'CartServiceApiGateway', {
+      restApiName: 'CartServiceApi',
+      deployOptions: {
+        stageName: 'dev',
+      },
+    });
+
+    restApi.root
+      .addResource('{proxy+}', {
+        defaultCorsPreflightOptions: {
+          allowOrigins: Cors.ALL_ORIGINS,
+          allowHeaders: Cors.DEFAULT_HEADERS,
+          allowMethods: Cors.ALL_METHODS,
+        },
+      })
+      .addMethod('ANY', new LambdaIntegration(cartServiceLambda));
+
+    new cdk.CfnOutput(this, 'LambdaArn', {
       value: cartServiceLambda.functionArn,
+    });
+
+    new cdk.CfnOutput(this, 'RestApiUrl', {
+      value: restApi.url,
     });
   }
 }
