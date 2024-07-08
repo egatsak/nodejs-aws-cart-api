@@ -1,16 +1,33 @@
 import * as cdk from 'aws-cdk-lib';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import {
+  NodejsFunction,
+  NodejsFunctionProps,
+} from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
+const sharedLambdaProps: NodejsFunctionProps = {
+  runtime: Runtime.NODEJS_20_X,
+  environment: {
+    PRODUCT_AWS_REGION: process.env.AWS_REGION ?? 'us-east-1',
+  },
+};
 export class NodejsAwsCartApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    const cartServiceLambda = new NodejsFunction(this, 'CartServiceLambda', {
+      ...sharedLambdaProps,
+      entry: 'dist/main.js',
+      functionName: 'cartServiceLambda',
+      timeout: cdk.Duration.seconds(10),
+      environment: {
+        ...sharedLambdaProps.environment,
+      },
+    });
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'NodejsAwsCartApiQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    new cdk.CfnOutput(this, 'Lambda', {
+      value: cartServiceLambda.functionArn,
+    });
   }
 }

@@ -23,7 +23,8 @@
     "cdk": "cdk",
     "cdk:bootstrap": "npx cdk bootstrap --profile admin",
     "cdk:deploy": "cdk deploy --profile admin",
-    "cdk:destroy": "cdk destroy --profile admin"
+    "cdk:destroy": "cdk destroy --profile admin",
+    "build:ncc": " npm run prebuild && ncc build src/main.ts --out dist/main.js -e typescript"
   },
   "dependencies": {
     "@codegenie/serverless-express": "^4.13.0",
@@ -34,9 +35,11 @@
     "@nestjs/passport": "^10.0.0",
     "@nestjs/platform-express": "^10.0.3",
     "aws-cdk-lib": "2.148.0",
+    "aws-lambda": "^1.0.7",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "constructs": "^10.0.0",
+    "copy-webpack-plugin": "^12.0.2",
     "dotenv": "^16.4.5",
     "helmet": "^7.0.0",
     "passport": "^0.6.0",
@@ -52,6 +55,7 @@
     "@nestjs/cli": "^10.0.3",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.3",
+    "@types/aws-lambda": "^8.10.140",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.12",
     "@types/node": "20.14.9",
@@ -60,6 +64,7 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "5.60.0",
     "@typescript-eslint/parser": "5.60.0",
+    "@vercel/ncc": "^0.38.1",
     "aws-cdk": "2.148.0",
     "constructs": "^10.3.0",
     "eslint": "8.43.0",
@@ -69,12 +74,13 @@
     "prettier": "^2.8.8",
     "rimraf": "^5.0.1",
     "supertest": "^6.3.3",
-    "terser-webpack-plugin": "^5.3.9",
+    "terser-webpack-plugin": "^5.3.10",
     "ts-jest": "^29.1.5",
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "~5.5.3"
+    "typescript": "~5.5.3",
+    "webpack": "^5.92.1"
   },
   "jest": {
     "moduleFileExtensions": [
