@@ -6,5 +6,5 @@ import 'dotenv/config';
 
 const app = new cdk.App();
 new NodejsAwsCartApiStack(app, 'NodejsAwsCartApiStack', {
-  env: { region: 'us-east-1' },
+  env: { region: process.env.AWS_REGION, account: process.env.AWS_ACCOUNT },
 });

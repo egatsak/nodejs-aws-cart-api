@@ -3,6 +3,7 @@ import serverlessExpress from '@codegenie/serverless-express';
 import { Handler, Context, Callback } from 'aws-lambda';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import 'dotenv/config';
 
 let server: Handler;
 
@@ -34,5 +35,6 @@ export const handler: Handler = async (
   }
   console.log(`Bootstrap finished!`);
   console.log(`Event: ${JSON.stringify(event)}`);
+  console.log(process.env.DATABASE_URL);
   return server(event, context, callback);
 };
