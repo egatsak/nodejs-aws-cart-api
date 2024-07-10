@@ -35,6 +35,5 @@ export const handler: Handler = async (
   }
   console.log(`Bootstrap finished!`);
   console.log(`Event: ${JSON.stringify(event)}`);
-  console.log(process.env.DATABASE_URL);
   return server(event, context, callback);
 };

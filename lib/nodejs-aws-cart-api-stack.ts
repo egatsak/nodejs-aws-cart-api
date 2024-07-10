@@ -43,7 +43,7 @@ export class NodejsAwsCartApiStack extends cdk.Stack {
     const pgUser = process.env.POSTGRES_USER ?? '';
     const pgPassword = process.env.POSTGRES_PASSWORD ?? '';
     const dbName = process.env.POSTGRES_DB ?? '';
-    const pgHost = process.env.POSTGRES_HOST ?? '';
+    // const pgHost = process.env.POSTGRES_HOST ?? '';
 
     const vpc = Vpc.fromLookup(this, 'DefaultVpc', {
       isDefault: true,
@@ -64,6 +64,7 @@ export class NodejsAwsCartApiStack extends cdk.Stack {
       vpc: vpc,
       vpcSubnets: {
         subnets: vpc.publicSubnets,
+        availabilityZones: ['us-east-1a'],
       },
     });
 
@@ -95,9 +96,8 @@ export class NodejsAwsCartApiStack extends cdk.Stack {
       ),
       allowMajorVersionUpgrade: false,
       autoMinorVersionUpgrade: false,
+      availabilityZone: 'us-east-1a',
     });
-
-    const DATABASE_URL = `postgresql://${pgUser}:${pgPassword}@${pgHost}:${pgPort}/${dbName}`;
 
     const cartServiceLambda = new NodejsFunction(this, 'CartServiceLambda', {
       ...sharedLambdaProps,
@@ -106,10 +106,17 @@ export class NodejsAwsCartApiStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(10),
       environment: {
         ...sharedLambdaProps.environment,
-        DATABASE_URL: DATABASE_URL,
+        POSTGRES_USER: pgUser,
+        POSTGRES_PASSWORD: pgPassword,
+        POSTGRES_DB: dbName,
+        POSTGRES_HOST: postgresInstance.instanceEndpoint.hostname,
+        POSTGRES_PORT: `${pgPort}`,
       },
       vpc: vpc,
       allowPublicSubnet: true,
+      vpcSubnets: {
+        availabilityZones: ['us-east-1a'],
+      },
     });
 
     const restApi = new RestApi(this, 'CartServiceApiGateway', {
