@@ -1,20 +1,20 @@
 import { CartItem } from '../../cart/models';
+import { Delivery, Payment } from '../order.interface';
 
 export type Order = {
-  id?: string,
+  id?: string;
   userId: string;
   cartId: string;
-  items: CartItem[]
-  payment: {
-    type: string,
-    address?: any,
-    creditCard?: any,
-  },
-  delivery: {
-    type: string,
-    address: any,
-  },
-  comments: string,
-  status: string;
+  items: CartItem[];
+  payment: Payment;
+  delivery: Delivery;
+  comments: string;
+  status: OrderStatus;
   total: number;
+};
+
+export enum OrderStatus {
+  IN_PROGRESS = 'IN_PROGRESS',
+  PAID = 'PAID',
+  DELIVERED = 'DELIVERED',
 }

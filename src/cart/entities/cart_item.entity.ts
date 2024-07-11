@@ -3,13 +3,13 @@ import { Cart } from './cart.entity';
 
 @Entity()
 export class CartItem {
-  @Column()
+  @Column('uuid', { nullable: false })
   cartId: string;
 
-  @ManyToOne(() => Cart, (cart) => cart.id)
+  @ManyToOne(() => Cart, (cart) => cart.id, { nullable: false })
   cart: Cart;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: false })
   productId: string;
 
   @Column('int')
