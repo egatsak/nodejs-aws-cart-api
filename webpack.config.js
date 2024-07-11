@@ -1,4 +1,5 @@
 import TerserPlugin from 'terser-webpack-plugin';
+
 // TODO try to build with webpack
 module.exports = (options, webpack) => {
   const lazyImports = [
