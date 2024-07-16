@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/services/users.service';
 import { User } from '../users/models/models';
 import { contentSecurityPolicy } from 'helmet';
+import { UserResponse } from 'src/users/users.interface';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  validateUser(name: string, password: string): any {
+  validateUser(name: string, password: string): Promise<UserResponse> {
     const user = this.usersService.findOne(name);
 
     if (user) {

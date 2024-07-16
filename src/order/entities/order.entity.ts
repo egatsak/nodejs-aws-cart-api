@@ -14,7 +14,7 @@ export class Order {
   @Column('uuid')
   cartId: string;
 
-  @OneToOne(() => Cart, (cart) => cart.id)
+  @OneToOne(() => Cart, (cart) => cart.id, { eager: true })
   cart: Cart;
 
   @Column('json', {

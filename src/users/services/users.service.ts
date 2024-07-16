@@ -14,12 +14,12 @@ export class UsersService {
     private readonly hashingService: HashingService,
   ) {}
 
-  async findOne(userId: string): Promise<User> {
-    const user = await this.userRepository.findOneBy({ id: userId });
+  async findOne(username: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ name: username });
 
-    if (!user) {
-      throw new NotFoundException(`User id=${userId} not found.`);
-    }
+    /*     if (!user) {
+      throw new NotFoundException(`User name=${username} not found.`);
+    } */
 
     return user;
   }
@@ -31,7 +31,7 @@ export class UsersService {
 
     const user = this.userRepository.create({
       ...createUserDto,
-      password: hashedPassword,
+      // password: hashedPassword,
     });
 
     return await this.userRepository.save(user);

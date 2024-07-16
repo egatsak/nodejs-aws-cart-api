@@ -9,7 +9,11 @@ export class CartItem {
   @Column('uuid', { nullable: false })
   cartId: string;
 
-  @ManyToOne(() => Cart, (cart) => cart.id, { nullable: false })
+  @ManyToOne(() => Cart, (cart) => cart.items, {
+    nullable: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   cart: Cart;
 
   @Column('uuid', { nullable: false })
@@ -17,4 +21,7 @@ export class CartItem {
 
   @Column('int')
   count: number;
+
+  @Column()
+  price: number;
 }

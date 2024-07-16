@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { Cart } from '../entities/cart.entity';
 import { CartItem } from '../entities/cart_item.entity';
 import { CartItemDto } from '../dtos/create-cart-item.dto';
-import { CartResponse } from '../models/models';
+import { CartResponse, CartStatuses } from '../models/models';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -14,14 +14,23 @@ export class CartService {
     @InjectRepository(CartItem)
     private readonly cartItemRepository: Repository<CartItem>,
   ) {}
+  async findById(cartId: string) {
+    const cart = await this.cartRepository.findOneBy({ id: cartId });
 
-  async findByUserId(userId: string): Promise<CartResponse | null> {
+    if (!cart) {
+      throw new NotFoundException(`Cart id=${cartId} not found.`);
+    }
+
+    return cart.toResponse();
+  }
+
+  async findByUserId(userId: string): Promise<CartResponse> {
     const cart = await this.cartRepository.findOneBy({
       userId,
     });
 
     if (cart) {
-      return new Cart(cart).toResponse();
+      return cart.toResponse();
     }
   }
 
@@ -49,17 +58,42 @@ export class CartService {
 
   async updateByUserId(
     userId: string,
-    itemDtos: CartItemDto[],
+    itemDto: CartItemDto | null,
+    isCheckout?: boolean,
   ): Promise<CartResponse> {
-    const { id } = await this.findOrCreateByUserId(userId);
+    const cart = await this.findOrCreateByUserId(userId);
 
-    const items = itemDtos.map((item) =>
-      this.cartItemRepository.create({ ...item, cartId: id }),
-    );
+    if (itemDto) {
+      const cartItem = await this.cartItemRepository.findOne({
+        where: {
+          productId: itemDto.productId,
+          cartId: cart.id,
+        },
+      });
 
-    await this.cartItemRepository.save(items);
+      if (cartItem) {
+        if (itemDto.count === 0) {
+          await this.cartItemRepository.delete({ id: cartItem.id });
+        } else {
+          await this.cartItemRepository.save({
+            ...cartItem,
+            count: itemDto.count,
+          });
+        }
+      } else {
+        const createdCartItem = this.cartItemRepository.create({
+          ...itemDto,
+          cartId: cart.id,
+        });
+        await this.cartItemRepository.save(createdCartItem);
+      }
+    }
 
-    return await this.findByUserId(userId);
+    if (isCheckout) {
+      await this.cartRepository.save({ ...cart, status: CartStatuses.ORDERED });
+    }
+
+    return await this.findById(cart.id);
   }
 
   async removeByUserId(userId: string): Promise<void> {
