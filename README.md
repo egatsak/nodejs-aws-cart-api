@@ -86,3 +86,12 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `npx cdk deploy`  deploy this stack to your default AWS account/region
 * `npx cdk diff`    compare deployed stack with current state
 * `npx cdk synth`   emits the synthesized CloudFormation template
+
+## Migrations
+
+Before running a migration start server in development mode: `npm run start:dev`. It establish connection to the DB.
+
+* `npm run typeorm:create` - creates empty migration
+* `npm run typeorm:generate` - generates migration according to entities & db diffs 
+* `npm run typeorm:run` - runs migration
+* `npm run typeorm:revert` - reverts migration

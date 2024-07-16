@@ -1,14 +1,18 @@
-import TerserPlugin from 'terser-webpack-plugin';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const TerserPlugin = require('terser-webpack-plugin');
 
-// TODO try to build with webpack
+const lazyImports = [
+  '@nestjs/microservices/microservices-module',
+  '@nestjs/websockets/socket-module',
+  '@nestjs/microservices',
+  '@nestjs/websockets',
+  '@nestjs/microservices-module',
+];
+
 module.exports = (options, webpack) => {
-  const lazyImports = [
-    '@nestjs/microservices/microservices-module',
-    '@nestjs/websockets/socket-module',
-  ];
-
   return {
     ...options,
+    devtool: 'source-map',
     externals: [
       '@nestjs/websockets/socket-module',
       '@nestjs/microservices/microservices-module',
@@ -17,7 +21,6 @@ module.exports = (options, webpack) => {
       ...options.output,
       libraryTarget: 'commonjs2',
     },
-    devtool: 'source-map',
     optimization: {
       minimize: false,
       minimizer: [
@@ -28,6 +31,7 @@ module.exports = (options, webpack) => {
               unused: true,
             },
             keep_classnames: true,
+            keep_fnames: true,
           },
         }),
       ],

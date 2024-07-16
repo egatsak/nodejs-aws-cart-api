@@ -8,6 +8,7 @@ import { CartModule } from './cart/cart.module';
 import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
 import { typeOrmConfig } from './typeorm.config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { typeOrmConfig } from './typeorm.config';
     AuthModule,
     CartModule,
     OrderModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [],

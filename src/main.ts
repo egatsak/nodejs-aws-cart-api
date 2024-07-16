@@ -37,3 +37,18 @@ export const handler: Handler = async (
   console.log(`Event: ${JSON.stringify(event)}`);
   return server(event, context, callback);
 };
+
+async function bootstrapLocal() {
+  const app = await NestFactory.create(AppModule);
+
+  app.enableCors({
+    origin: (req, callback) => callback(null, true),
+  });
+
+  app.use(helmet());
+  await app.listen(3000);
+}
+
+if (process.env.NODE_ENV === 'development') {
+  bootstrapLocal();
+}

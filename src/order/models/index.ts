@@ -1,4 +1,4 @@
-import { CartItem } from '../../cart/models';
+import { CartItem } from '../../cart/models/models';
 import { Delivery, Payment } from '../order.interface';
 
 export type Order = {

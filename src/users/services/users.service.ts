@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { User } from '../entities/user.entity';
@@ -8,6 +9,7 @@ import { HashingService } from 'src/common/hashing/hashing.service';
 @Injectable()
 export class UsersService {
   constructor(
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly hashingService: HashingService,
   ) {}
@@ -22,7 +24,7 @@ export class UsersService {
     return user;
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createOne(createUserDto: CreateUserDto): Promise<User> {
     const { password } = createUserDto;
 
     const hashedPassword = await this.hashingService.hash(password);

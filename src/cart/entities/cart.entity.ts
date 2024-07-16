@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CartResponse, CartStatuses } from '../models';
+import { CartResponse, CartStatuses } from '../models/models';
 import { CartItem } from './cart_item.entity';
 import { Transform } from 'class-transformer';
 

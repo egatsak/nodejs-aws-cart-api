@@ -1,4 +1,4 @@
-import { CartResponse, CartItem } from '../models';
+import { CartResponse, CartItem } from '../models/models';
 
 /**
  * @param {Cart} cart

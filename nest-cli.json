@@ -1,7 +1,4 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
-  "compilerOptions": {
-    "builder": "webpack"
-  }
+  "sourceRoot": "src"
 }
