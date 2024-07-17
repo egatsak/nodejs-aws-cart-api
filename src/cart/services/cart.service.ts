@@ -1,10 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Cart } from '../entities/cart.entity';
 import { CartItem } from '../entities/cart_item.entity';
 import { CartItemDto } from '../dtos/create-cart-item.dto';
 import { CartResponse, CartStatuses } from '../models/models';
-import { InjectRepository } from '@nestjs/typeorm';
+import { CreateOrderDto } from 'src/order/dtos/create-order.dto';
+import { OrderService } from 'src/order/services/order.service';
+import { calculateCartTotal } from '../models-rules';
 
 @Injectable()
 export class CartService {
@@ -13,6 +20,8 @@ export class CartService {
     private readonly cartRepository: Repository<Cart>,
     @InjectRepository(CartItem)
     private readonly cartItemRepository: Repository<CartItem>,
+    private orderService: OrderService,
+    private dataSource: DataSource,
   ) {}
   async findById(cartId: string) {
     const cart = await this.cartRepository.findOneBy({ id: cartId });
@@ -101,6 +110,40 @@ export class CartService {
 
     if (result.affected !== 1) {
       throw new NotFoundException(`Cart for user=${userId} not found`);
+    }
+  }
+
+  async checkout(userId: string, createOrderDto: CreateOrderDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const cart = await this.findByUserId(userId);
+
+      if (!(cart && cart.items.length)) {
+        throw new BadRequestException('Cart is empty');
+      }
+      const total = calculateCartTotal(cart);
+      const order = await this.orderService.create({
+        ...createOrderDto,
+        userId,
+        cartId: cart.id,
+        total,
+      });
+
+      if (order) {
+        this.updateByUserId(userId, null, true);
+      }
+
+      await queryRunner.commitTransaction();
+      return order;
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw e;
+    } finally {
+      await queryRunner.release();
     }
   }
 }
