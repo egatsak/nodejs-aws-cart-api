@@ -36,6 +36,7 @@ export class CartService {
   async findByUserId(userId: string): Promise<CartResponse> {
     const cart = await this.cartRepository.findOneBy({
       userId,
+      status: CartStatuses.OPEN,
     });
 
     if (cart) {
@@ -100,9 +101,9 @@ export class CartService {
     }
 
     if (isCheckout) {
-      //await this.cartRepository.save({ ...cart, status: CartStatuses.ORDERED });
+      await this.cartRepository.save({ ...cart, status: CartStatuses.ORDERED });
       //await this.removeByUserId(userId);
-      await this.cartItemRepository.delete({ cartId: cart.id });
+      //await this.cartItemRepository.delete({ cartId: cart.id });
     }
 
     return await this.findById(cart.id);
@@ -137,7 +138,12 @@ export class CartService {
       });
 
       if (order) {
-        this.updateByUserId(userId, null, true);
+        await this.cartRepository.update(
+          {
+            id: cart.id,
+          },
+          { status: CartStatuses.ORDERED },
+        );
       }
 
       await queryRunner.commitTransaction();
