@@ -12,6 +12,10 @@ export class OrderService {
     private readonly orderRepository: Repository<Order>,
   ) {}
 
+  async findAll(userId: string) {
+    return await this.orderRepository.find({ where: { userId } });
+  }
+
   async findById(orderId: string): Promise<Order> {
     const order = await this.orderRepository.findOneBy({ id: orderId });
 
