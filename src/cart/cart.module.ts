@@ -6,7 +6,7 @@ import { CartController } from './cart.controller';
 import { CartService } from './services/cart.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cart } from './entities/cart.entity';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 import { CartItem } from './entities/cart_item.entity';
 
 @Module({

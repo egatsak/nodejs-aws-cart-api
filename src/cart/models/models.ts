@@ -11,9 +11,8 @@ export type Product = {
 };
 
 export type CartItem = {
-  productId: string;
+  product: Product;
   count: number;
-  price: number;
 };
 
 export type CartResponse = {

@@ -1,14 +1,25 @@
+import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import serverlessExpress from '@codegenie/serverless-express';
 import { Handler, Context, Callback } from 'aws-lambda';
 import helmet from 'helmet';
-import { AppModule } from './app.module';
 import 'dotenv/config';
 
 let server: Handler;
 
+console.log(process.env.NODE_ENV);
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   app.enableCors({
     origin: (req, callback) => callback(null, true),
@@ -40,6 +51,14 @@ export const handler: Handler = async (
 
 async function bootstrapLocal() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   app.enableCors({
     origin: (req, callback) => callback(null, true),

@@ -6,8 +6,11 @@ import { CartResponse, CartItem } from '../models/models';
  */
 export function calculateCartTotal(cart: CartResponse): number {
   return cart?.items
-    ? cart.items.reduce((acc: number, { price, count }: CartItem) => {
-        return (acc += price * count);
-      }, 0)
+    ? cart.items.reduce(
+        (acc: number, { product: { price }, count }: CartItem) => {
+          return (acc += price * count);
+        },
+        0,
+      )
     : 0;
 }

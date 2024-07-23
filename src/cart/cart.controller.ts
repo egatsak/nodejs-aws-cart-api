@@ -8,11 +8,8 @@ import {
   Post,
   UseGuards,
   HttpStatus,
-  HttpException,
   HttpCode,
 } from '@nestjs/common';
-
-// import { BasicAuthGuard, JwtAuthGuard } from '../auth';
 
 import { calculateCartTotal } from './models-rules';
 import { CartService } from './services/cart.service';
@@ -26,7 +23,6 @@ import { CartItemDto } from './dtos/create-cart-item.dto';
 export class CartController {
   constructor(private cartService: CartService) {}
 
-  // @UseGuards(JwtAuthGuard)
   @UseGuards(BasicAuthGuard)
   @Get()
   async findUserCart(@Req() req: AppRequest) {
@@ -43,11 +39,9 @@ export class CartController {
     };
   }
 
-  // @UseGuards(JwtAuthGuard)
   @UseGuards(BasicAuthGuard)
   @Put()
   async updateUserCart(@Req() req: AppRequest, @Body() body: CartItemDto) {
-    // TODO: validate body payload...
     const cart = await this.cartService.updateByUserId(
       getUserIdFromRequest(req),
       body,
@@ -63,7 +57,6 @@ export class CartController {
     };
   }
 
-  // @UseGuards(JwtAuthGuard)
   @UseGuards(BasicAuthGuard)
   @Delete()
   @HttpCode(204)
@@ -71,12 +64,9 @@ export class CartController {
     return await this.cartService.removeByUserId(getUserIdFromRequest(req));
   }
 
-  // @UseGuards(JwtAuthGuard)
   @UseGuards(BasicAuthGuard)
   @Post('checkout')
   async checkout(@Req() req: AppRequest, @Body() body: CreateOrderDto) {
-    // TODO: validate and pick only necessary data from body
-
     const userId = getUserIdFromRequest(req);
 
     try {

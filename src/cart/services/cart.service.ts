@@ -39,7 +39,7 @@ export class CartService {
     });
 
     if (cart) {
-      return cart.toResponse();
+      return new Cart(cart).toResponse();
     }
   }
 
@@ -73,12 +73,13 @@ export class CartService {
     const cart = await this.findOrCreateByUserId(userId);
 
     if (itemDto) {
-      const cartItem = await this.cartItemRepository.findOne({
-        where: {
-          productId: itemDto.productId,
-          cartId: cart.id,
-        },
-      });
+      const cartItem = await this.cartItemRepository
+        .createQueryBuilder('cartItem')
+        .where("cartItem.product ->> 'id' = :productId", {
+          productId: itemDto.product.id,
+        })
+        .andWhere('cartItem.cartId = :cartId', { cartId: cart.id })
+        .getOne();
 
       if (cartItem) {
         if (itemDto.count === 0) {
@@ -99,7 +100,9 @@ export class CartService {
     }
 
     if (isCheckout) {
-      await this.cartRepository.save({ ...cart, status: CartStatuses.ORDERED });
+      //await this.cartRepository.save({ ...cart, status: CartStatuses.ORDERED });
+      //await this.removeByUserId(userId);
+      await this.cartItemRepository.delete({ cartId: cart.id });
     }
 
     return await this.findById(cart.id);

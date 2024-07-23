@@ -144,11 +144,16 @@ OGh9pTYPVkUbBiKPA7lVVhre
 } satisfies DataSourceOptions;
 
 export const appDataSource = new DataSource(typeOrmConfig);
-appDataSource
-  .initialize()
-  .then(() => {
-    console.log('Data Source has been initialized');
-  })
-  .catch((err) => {
-    console.error('Error during Data Source initialization', err);
-  });
+
+if (process.env.NODE_ENV === 'development') {
+  appDataSource
+    .initialize()
+    .then(() => {
+      console.log('Data Source has been initialized');
+    })
+    .catch((err) => {
+      console.error('Error during Data Source initialization', err);
+    });
+}
+
+//

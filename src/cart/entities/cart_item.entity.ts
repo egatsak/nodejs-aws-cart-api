@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Cart } from './cart.entity';
+import { Product } from '../models/models';
 
 @Entity()
 export class CartItem {
@@ -16,12 +17,9 @@ export class CartItem {
   })
   cart: Cart;
 
-  @Column('uuid', { nullable: false })
-  productId: string;
+  @Column('jsonb', { nullable: false })
+  product: Product;
 
   @Column('int')
   count: number;
-
-  @Column()
-  price: number;
 }

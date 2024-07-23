@@ -9,6 +9,10 @@ import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
 import { typeOrmConfig } from './typeorm.config';
 import { UsersModule } from './users/users.module';
+import { User } from './users/entities/user.entity';
+import { Order } from './order/entities/order.entity';
+import { Cart } from './cart/entities/cart.entity';
+import { CartItem } from './cart/entities/cart_item.entity';
 
 @Module({
   imports: [
@@ -18,6 +22,7 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         ...typeOrmConfig,
+        entities: [User, Order, Cart, CartItem],
         host: configService.get<string>('POSTGRES_HOST'),
         port: +configService.get<string>('POSTGRES_PORT'),
         username: configService.get<string>('POSTGRES_USER'),
