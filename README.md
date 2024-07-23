@@ -87,9 +87,13 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `npx cdk diff`    compare deployed stack with current state
 * `npx cdk synth`   emits the synthesized CloudFormation template
 
+* `npm run cdk:bootstrap` provisioning resources for the AWS CDK before deploying AWS CDK apps into an AWS environment
+* `npm run cdk:deploy`    deploy this stack to your default AWS account/region
+* `npm run cdk:destroy`   destroys AWS stack & deletes Lambdas, API Gateway & CloudFormation stack
+
 ## Migrations
 
-Before running a migration start server in development mode: `npm run start:dev`. It establish connection to the DB.
+Before running a migration start server in development mode: `npm run start:dev`. It establishes connection to the DB.
 
 * `npm run typeorm:create` - creates empty migration
 * `npm run typeorm:generate` - generates migration according to entities & db diffs 
