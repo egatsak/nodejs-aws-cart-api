@@ -1,15 +1,10 @@
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import serverlessExpress from '@codegenie/serverless-express';
-import { Handler, Context, Callback } from 'aws-lambda';
 import helmet from 'helmet';
 import 'dotenv/config';
 
-let server: Handler;
-
-console.log(process.env.NODE_ENV);
-
+/* 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -33,9 +28,9 @@ async function bootstrap() {
   return serverlessExpress({
     app: expressApp,
   });
-}
+} */
 
-export const handler: Handler = async (
+/* export const handler: Handler = async (
   event: unknown,
   context: Context,
   callback: Callback,
@@ -47,9 +42,9 @@ export const handler: Handler = async (
   console.log(`Bootstrap finished!`);
   console.log(`Event: ${JSON.stringify(event)}`);
   return server(event, context, callback);
-};
+}; */
 
-async function bootstrapLocal() {
+async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
@@ -65,9 +60,7 @@ async function bootstrapLocal() {
   });
 
   app.use(helmet());
-  await app.listen(3000);
+  await app.listen(+process.env.PORT);
 }
 
-if (process.env.NODE_ENV === 'development') {
-  bootstrapLocal();
-}
+bootstrap();
