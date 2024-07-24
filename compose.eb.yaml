@@ -1,0 +1,10 @@
+version: '3.8' # up-to-date
+
+services: 
+  nestjs:
+    image: egatsak-cart-api
+    env_file:
+      - .env
+    ports: 
+      - 80:${PORT} # expose-to-the-world : only-in-the-docker
+    command: sh -c "npm run start:prod"

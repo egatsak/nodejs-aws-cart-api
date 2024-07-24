@@ -6,7 +6,6 @@ RUN mkdir -p /tmp/devdeps
 COPY package*.json /tmp/devdeps
 WORKDIR /tmp/devdeps
 RUN npm ci 
-# TODO clean cache
 
 FROM default as prod
 RUN mkdir -p /tmp/proddeps 
@@ -28,4 +27,4 @@ COPY --from=prod /tmp/proddeps/node_modules node_modules
 COPY --from=build /app/dist dist
 COPY --from=build /app/package.json .
 
-CMD ["node","dist/main.js"]
+CMD ["node", "dist/main.js"]

@@ -31,9 +31,6 @@ services:
       - db
     networks:
       - cart-api-network
-   # volumes: 
-   #   - .:/app
-     # - /app/node_modules
 
 volumes:
   cart-api-pgdata:
