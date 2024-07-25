@@ -24,12 +24,12 @@
     "cdk:bootstrap": "npx cdk bootstrap --profile admin",
     "cdk:deploy": "cdk deploy --profile admin",
     "cdk:destroy": "cdk destroy --profile admin",
-    "build:ncc": " npm run prebuild && ncc build src/main.ts --out dist/main.js -e typescript",
     "typeorm": "typeorm-ts-node-commonjs",
     "typeorm:create": "npm run typeorm migration:create -- ./migrations/production-server",
     "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/typeorm.config.ts ./migrations/production-server",
     "typeorm:run": "npm run typeorm migration:run -- -d ./src/typeorm.config.ts",
-    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/typeorm.config.ts"
+    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/typeorm.config.ts",
+    "seed": "ts-node ./seed.ts"
   },
   "dependencies": {
     "@codegenie/serverless-express": "^4.13.0",
