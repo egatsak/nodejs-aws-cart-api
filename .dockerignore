@@ -33,3 +33,6 @@ lib
 .eslintrc.js
 .prettierrc
 
+# Elastic beanstalk files
+.ebextensions
+.elasticbeanstalk
