@@ -1,8 +1,7 @@
-version: '3.8' # up-to-date
-
+name: cart-api
 services: 
   nestjs:
-    image: egatsak-cart-api
+    image: egatsak/egatsak-cart-api
     env_file:
       - .env
     ports: 

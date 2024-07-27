@@ -29,7 +29,10 @@
     "typeorm:create": "npm run typeorm migration:create -- ./migrations/production-server",
     "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/typeorm.config.ts ./migrations/production-server",
     "typeorm:run": "npm run typeorm migration:run -- -d ./src/typeorm.config.ts",
-    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/typeorm.config.ts"
+    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/typeorm.config.ts",
+    "eb:init": "eb init egatsak-cart-api",
+    "eb:createenv": "eb create development --cname egatsak-cart-api-development --single",
+    "eb:terminate": "eb terminate"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.3",
