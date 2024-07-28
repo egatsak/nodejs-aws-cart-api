@@ -24,7 +24,7 @@ RUN npm run build
 FROM default AS final
 WORKDIR /app
 COPY --from=prod /tmp/proddeps/node_modules node_modules
-COPY --from=build /app/dist dist
 COPY --from=build /app/package.json .
+COPY --from=build /app/dist dist
 
 CMD ["node", "dist/main.js"]
