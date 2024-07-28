@@ -120,6 +120,8 @@ Endpoints:
 
 One can use this environment to test using Postman or Insomnia. Insomnia collection is included in the repo.
 
+Env vars for beanstalk are stored in AWS Systems Manager Parameter Store. `.ebextensions` content is responsible for getting them.
+
 ## API Gateway proxy
 
 EB container exposes only http server, so we use API Gateway HTTP API to expose the application at https server to integrate with the frontend.
