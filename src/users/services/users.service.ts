@@ -1,28 +1,39 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-import { v4 } from 'uuid';
-
-import { User } from '../models';
+import { User } from '../entities/user.entity';
+import { CreateUserDto } from '../dto/create-user.dto/create-user.dto';
+import { HashingService } from '../../common/hashing/hashing.service';
 
 @Injectable()
 export class UsersService {
-  private readonly users: Record<string, User>;
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly hashingService: HashingService,
+  ) {}
 
-  constructor() {
-    this.users = {}
+  async findOne(username: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ name: username });
+
+    /*     if (!user) {
+      throw new NotFoundException(`User name=${username} not found.`);
+    } */
+
+    return user;
   }
 
-  findOne(userId: string): User {
-    return this.users[ userId ];
+  async createOne(createUserDto: CreateUserDto): Promise<User> {
+    const { password } = createUserDto;
+
+    const hashedPassword = await this.hashingService.hash(password);
+
+    const user = this.userRepository.create({
+      ...createUserDto,
+      // password: hashedPassword,
+    });
+
+    return await this.userRepository.save(user);
   }
-
-  createOne({ name, password }: User): User {
-    const id = v4();
-    const newUser = { id: name || id, name, password };
-
-    this.users[ id ] = newUser;
-
-    return newUser;
-  }
-
 }

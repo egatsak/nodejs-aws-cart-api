@@ -1,39 +1,50 @@
-import { Injectable } from '@nestjs/common';
-import { v4 } from 'uuid';
-
-import { Order } from '../models';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Order } from '../entities/order.entity';
+import { CreateOrderDto } from '../dtos/create-order.dto';
+import { UpdateOrderDto } from '../dtos/update-order.dto';
 
 @Injectable()
 export class OrderService {
-  private orders: Record<string, Order> = {}
+  constructor(
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
+  ) {}
 
-  findById(orderId: string): Order {
-    return this.orders[ orderId ];
-  }
+  async findById(orderId: string): Promise<Order> {
+    const order = await this.orderRepository.findOneBy({ id: orderId });
 
-  create(data: any) {
-    const id = v4()
-    const order = {
-      ...data,
-      id,
-      status: 'inProgress',
-    };
-
-    this.orders[ id ] = order;
+    if (!order) {
+      throw new NotFoundException(`Order id=${orderId} not found`);
+    }
 
     return order;
   }
 
-  update(orderId, data) {
-    const order = this.findById(orderId);
+  async create(createOrderDto: CreateOrderDto) {
+    const order = this.orderRepository.create(createOrderDto);
+
+    const savedOrder = await this.orderRepository.save(order);
+
+    return savedOrder;
+  }
+
+  async update(
+    orderId: string,
+    updateOrderDto: UpdateOrderDto,
+  ): Promise<Order> {
+    const order = await this.orderRepository.preload({
+      id: orderId,
+      ...updateOrderDto,
+    });
 
     if (!order) {
-      throw new Error('Order does not exist.');
+      throw new NotFoundException(`Order id=${orderId} not found`);
     }
 
-    this.orders[ orderId ] = {
-      ...data,
-      id: orderId,
-    }
+    await this.orderRepository.save(order);
+
+    return order;
   }
 }

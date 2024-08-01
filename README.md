@@ -73,3 +73,29 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
   Nest is [MIT licensed](LICENSE).
+
+## CDK
+
+The `cdk.json` file tells the CDK Toolkit how to execute your app.
+
+## Useful commands
+
+* `npm run build`   compile typescript to js
+* `npm run watch`   watch for changes and compile
+* `npm run test`    perform the jest unit tests
+* `npx cdk deploy`  deploy this stack to your default AWS account/region
+* `npx cdk diff`    compare deployed stack with current state
+* `npx cdk synth`   emits the synthesized CloudFormation template
+
+* `npm run cdk:bootstrap` provisioning resources for the AWS CDK before deploying AWS CDK apps into an AWS environment
+* `npm run cdk:deploy`    deploy this stack to your default AWS account/region
+* `npm run cdk:destroy`   destroys AWS stack & deletes Lambdas, API Gateway & CloudFormation stack
+
+## Migrations
+
+Before running a migration start server in development mode: `npm run start:dev`. It establishes connection to the DB.
+
+* `npm run typeorm:create` - creates empty migration
+* `npm run typeorm:generate` - generates migration according to entities & db diffs 
+* `npm run typeorm:run` - runs migration
+* `npm run typeorm:revert` - reverts migration
