@@ -1,0 +1,40 @@
+version: '3.8' # up-to-date
+
+services: 
+  db:
+    image: postgres
+    container_name: cart-api-db
+    restart: always
+    environment: 
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    volumes:
+      - cart-api-pgdata:/var/lib/postgresql/data
+    networks:
+      - cart-api-network
+    ports: 
+      - "${POSTGRES_PORT}:5432"
+
+  nestjs:
+    image: egatsak-cart-api
+    container_name: cart-api-server
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    ports: 
+      - "${PORT}:${PORT}" # expose-to-the-world : only-in-the-docker
+    depends_on: 
+      - db
+    networks:
+      - cart-api-network
+
+volumes:
+  cart-api-pgdata:
+
+networks:
+  cart-api-network:
+    driver: bridge
